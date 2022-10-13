@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: EurekaServer
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false

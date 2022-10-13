@@ -1,0 +1,39 @@
+
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      user: ${mongodb_user}
+      password: ${mongodb_password}
+      host: localhost
+      port: 27017
+      database: shoppingServiceCommandDB
+
+  application:
+    name: ShoppingServiceCommand
+  cloud:
+    schema-registry-client:
+      endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
+    stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+          auto-add-partitions: true
+      bindings:
+        shopping-out-0:
+          destination: shoppingServiceTopic
+          producer:
+            partition-key-expression: headers['partitionKey']
+            partition-count: 2
+
+  zipkin:
+    base-url: http://localhost:9411/
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
+#app.topic.greetingtopic= topicAA

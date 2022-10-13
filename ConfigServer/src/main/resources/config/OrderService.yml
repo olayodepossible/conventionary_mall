@@ -1,0 +1,51 @@
+
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      user: ${mongodb_user}
+      password: ${mongodb_password}
+      host: localhost
+      port: 27017
+      database: orderServiceDB
+
+  application:
+    name: OrderService
+
+  cloud:
+    stream:
+      default-binder: kafka
+      dynamicDestinations: orderEvent, customerOrderEvent
+      kafka:
+        binder:
+          brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+          autoCreateTopics: false
+          auto-add-partitions: true
+          min-partition-count: 2
+      bindings:
+        orderApproval-in-0:
+          destination: vendorServiceTopic, paymentService
+          content-type: application/*+avro
+          group: vendorServiceGroup
+          consumer:
+            max-attempts: 4
+            back-off-initial-interval: 10000
+        sendOrder-out-0:
+          destination: orderServiceTopic
+          content-type: application/*+avro
+          producer:
+            useNativeEncoding: true
+#            partitioned: true
+            partition-key-expression: headers['partitionKey']
+            partition-count: 2
+
+  zipkin:
+    base-url: http://localhost:9411/
+  sleuth:
+    sampler:
+      probability: 1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

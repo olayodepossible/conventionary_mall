@@ -1,0 +1,45 @@
+
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      user: ${mongodb_user}
+      password: ${mongodb_password}
+      host: localhost
+      port: 27017
+      database: shoppingServiceQueryDB
+
+  application:
+    name: ShoppingServiceQuery
+
+  stream:
+    kafka:
+      binder:
+        brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+        auto-add-partitions: true
+    bindings:
+      shopping-in-0:
+        destination: shoppingServiceTopic
+        group: shoppingServiceGroup
+        consumer:
+          max-attempts: 4
+          back-off-initial-interval: 10000
+
+  zipkin:
+    base-url: http://localhost:9411/
+  sleuth:
+    sampler:
+      probability: 1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
+
+
+app:
+  topic:
+    greetingtopic: topicAA
+

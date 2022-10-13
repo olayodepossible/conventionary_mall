@@ -1,0 +1,36 @@
+{
+	"namespace": "com.possible.commonslib.avro",
+	"type": "record",
+	"name": "OrderEvent",
+	"fields": [
+		{"name": "orderId", "type": "string"},
+		{"name": "customerId", "type": "string"},
+		{"name": "orderLineList", "type": {
+		        "type": "array",
+		        "items": {
+		            "name": "OrderLine",
+		            "type": "record",
+		            "fields": [
+		                {"name":"quantity", "type":"int"},
+		                {"name":"product", "type":{
+		                        "type": "record",
+		                        "name": "Product",
+		                        "fields": [
+                                		{"name": "productId", "type": "string"},
+                                		{"name": "productLogo", "type": ["string", "null"]},
+                                		{"name": "productName", "type": ["string", "null"]},
+                                		{"name": "productFlavour", "type": ["string", "null"]},
+                                		{"name": "productPrice", "type": ["double", "null"]},
+                                		{"name": "vendorId", "type": ["string", "null"]},
+                                		{"name": "productDescription", "type": ["string", "null"]},
+                                		{"name": "productNumInStock", "type": ["int", "null"]},
+                                		{"name": "rating", "type": ["null", "int"]}
+                                ]
+		                    }
+		                }
+		            ]
+		        }
+		    }
+		}
+	]
+}

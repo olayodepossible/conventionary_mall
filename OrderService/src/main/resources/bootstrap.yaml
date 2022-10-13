@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: OrderService
+  cloud:
+    config:
+      url: http://localhost:8888
