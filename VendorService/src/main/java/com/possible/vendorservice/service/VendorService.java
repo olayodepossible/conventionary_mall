@@ -1,5 +1,6 @@
 package com.possible.vendorservice.service;
 
+import com.possible.vendorservice.domain.Product;
 import com.possible.vendorservice.domain.Vendor;
 import com.possible.vendorservice.repository.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,10 @@ public class VendorService {
 
     public Vendor updateVendor(Vendor Vendor) {
         return vendorRepository.save(Vendor);
-
     }
 
     public void deleteVendor(String VendorId) {
-
         vendorRepository.deleteById(VendorId);
-
     }
 
     public Optional<Vendor> findById(String VendorId) {
@@ -38,5 +36,4 @@ public class VendorService {
     public List<Vendor> findAll() {
         return vendorRepository.findAll();
     }
-
 }

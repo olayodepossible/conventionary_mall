@@ -1,10 +1,7 @@
 package com.possible.productservice.integration;
 
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.possible.commonslib.avro.OrderEvent;
-import com.possible.productservice.domain.Order;
-
 import com.possible.productservice.domain.OrderLine;
 import com.possible.productservice.domain.Product;
 import com.possible.productservice.service.ProductService;
@@ -37,14 +34,14 @@ public class OrderListener {
             if (acknowledgment != null) {
                 acknowledgment.acknowledge();
             }
-            if (Objects.equals(message.getHeaders().get("partitionKey"),PARTITION_KEY)){
-                List<OrderLine> orderLines =  new ArrayList<>();
+            if (Objects.equals(message.getHeaders().get("partitionKey"), PARTITION_KEY)) {
+                List<OrderLine> orderLines = new ArrayList<>();
 
-                for (com.possible.commonslib.avro.OrderLine orderLine : message.getPayload().getOrderLineList()){
+                for (com.possible.commonslib.avro.OrderLine orderLine : message.getPayload().getOrderLineList()) {
                     Product product = Product.builder()
-                            .productId( orderLine.getProduct().getProductId().toString())
+                            .productId(orderLine.getProduct().getProductId().toString())
                             .productName(orderLine.getProduct().getProductName().toString())
-                            .productLogo( orderLine.getProduct().getProductLogo().toString())
+                            .productLogo(orderLine.getProduct().getProductLogo().toString())
                             .productPrice(orderLine.getProduct().getProductPrice())
                             .productNumInStock(orderLine.getProduct().getProductNumInStock())
                             .rating(orderLine.getProduct().getRating())

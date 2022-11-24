@@ -1,0 +1,30 @@
+{
+	"namespace": "com.possible.commonslib.avro",
+	"type": "record",
+	"name": "VendorEvent",
+	"fields": [
+		{"name": "id", "type": "string"},
+		{"name": "firstName", "type": "string"},
+		{"name": "lastName", "type": "string"},
+		{"name": "phone", "type": "string"},
+		{"name": "email", "type": "string"},
+		{"name": "companyName", "type": "string"},
+		{"name": "companyLogo", "type": "string"},
+		{"name": "desc", "type": "string"},
+		{"name": "gender", "type": "string"},
+		{"name": "companyAddress", "type": {
+		        "type": "record",
+                "name": "Address",
+                "fields": [
+                        {"name": "street", "type": "string"},
+                        {"name": "city", "type": "string"},
+                        {"name": "zip", "type": "string"},
+                        {"name": "country", "type": "string"},
+                        {"name": "latitude", "type": ["int", "null"]},
+                        {"name": "longitude", "type": ["int", "null"]}
+                ]
+		    }
+		}
+
+	]
+}

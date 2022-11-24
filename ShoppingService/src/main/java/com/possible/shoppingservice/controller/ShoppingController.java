@@ -53,19 +53,15 @@ public class ShoppingController {
     @DeleteMapping("/removeProductFromCart/{customerId}/product/{productId}")
     public ResponseEntity<?> removeAllProduct(@PathVariable("customerId") String customerId ,
                                               @PathVariable("productId") String productId){
-
         shoppingService.removeAllProduct(customerId,productId);
-
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/checkout/{customerId}")
     public ResponseEntity<Order> checkoutCart(@PathVariable String customerId){
         List<CartLine> cartLines =  shoppingService.checkoutCart(customerId);
-        log.info("****** CART LINES **********: \n {}", cartLines);
         Order order = shoppingFeignClient.createOrder(cartLines, customerId);
         shoppingService.removeCartLine(customerId);
-        log.info("ODER RETURNED ******************\n{}", order);
         return new ResponseEntity<>(order,HttpStatus.OK);
 
     }
@@ -83,9 +79,5 @@ public class ShoppingController {
         boolean checkProductInStock(@PathVariable("productId") String productId, Integer quantity);
 
     }
-
-
-
-
 
 }

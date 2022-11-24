@@ -35,7 +35,6 @@ spring:
           content-type: application/*+avro
           producer:
             useNativeEncoding: true
-#            partitioned: true
             partition-key-expression: headers['partitionKey']
             partition-count: 2
 

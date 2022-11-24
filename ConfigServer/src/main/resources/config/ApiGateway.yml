@@ -38,3 +38,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+
+#      //timeout for one specific route in ms
+#      spring.cloud.gateway.routes[0].metadata.response-timeout=3000
+#  //global timeout for all routes
+#  spring.cloud.gateway.httpclient.response-timeout= 2s
