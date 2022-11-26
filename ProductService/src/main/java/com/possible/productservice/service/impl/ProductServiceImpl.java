@@ -1,6 +1,7 @@
 package com.possible.productservice.service.impl;
 
 import com.possible.productservice.domain.OrderLine;
+import com.possible.productservice.domain.ProductDto;
 import com.possible.productservice.exception.ProductNotfoundException;
 import com.possible.productservice.domain.Product;
 import com.possible.productservice.repository.ProductRepository;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -31,8 +34,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product addProduct(Product product) {
-        return productRepository.save(product);
+    public Product addProduct(ProductDto product) {
+        Product product1 = Product.builder()
+                .productName(product.getProductName())
+                .productFlavour(product.getProductFlavour())
+                .productLogo(product.getProductLogo())
+                .productPrice(product.getProductPrice())
+                .productDescription(product.getProductDescription())
+                .productNumInStock(product.getProductNumInStock())
+                .vendorId(product.getVendorId())
+                .build();
+        return productRepository.save(product1);
     }
 
     @Override
@@ -43,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product editProduct(String productNumber, Product product) {
+    public Product editProduct(String productNumber, ProductDto product) {
         Product oldProduct= productRepository.findById(productNumber).orElse(null);
         if (oldProduct == null) throw new ProductNotfoundException(PRODUCT_NOT_FOUND);
         oldProduct.setProductName(product.getProductName());
@@ -56,15 +68,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Integer getProductNumInStock(String productId) {
-        Product product= productRepository.findById(productId).orElse(null);
-        if(product==null) return 0;
-        return product.getProductNumInStock();
+        Optional<Product> product= productRepository.findById(productId);
+        if(product.isEmpty()) return 0;
+        return product.get().getProductNumInStock();
     }
 
     @Override
     public Product addProductToStock(String productNumber, Integer quantity) {
-        Product product= productRepository.findById(productNumber).orElse(null);
-        if(product==null) throw new ProductNotfoundException(PRODUCT_NOT_FOUND); //handle exception
+        Product product= productRepository.findById(productNumber).orElseThrow( () -> new ProductNotfoundException(PRODUCT_NOT_FOUND));
         product.setProductNumInStock(product.getProductNumInStock()+quantity);
         return productRepository.save(product);
     }
@@ -89,9 +100,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void removeQuantityOfProducts(List<OrderLine> orderLines) {
-        if (orderLines == null) return;
-        orderLines.forEach(orderLine->{
-            removeProductFromStock(orderLine.getProduct().getProductId(), orderLine.getQuantity());
-        });
+        if (Objects.isNull(orderLines)) return;
+        orderLines.forEach(orderLine-> removeProductFromStock(orderLine.getProduct().getProductId(), orderLine.getQuantity()));
+
     }
 }

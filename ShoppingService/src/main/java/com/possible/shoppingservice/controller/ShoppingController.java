@@ -34,7 +34,7 @@ public class ShoppingController {
     @PostMapping("/addProductToCartWithQuantity/{customerId}/quantity/{quantity}")
     public ResponseEntity<ShoppingCart> addProductToShoppingCart(@PathVariable String customerId , @PathVariable Integer quantity
             , @RequestBody Product product){
-        if(productFeignClient.checkProductInStock(product.getProductId(), quantity)){
+        if(productFeignClient.isProductInStock(product.getProductId(), quantity)){
             ShoppingCart shoppingCart = shoppingService.addProductToAShoppingCart(customerId, product, quantity);
             return new ResponseEntity<>(shoppingCart, HttpStatus.OK);
         }
@@ -43,7 +43,7 @@ public class ShoppingController {
     }
 
     @DeleteMapping("/removeProductFromCartWithQuantity/{customerId}/product/{productId}/quantity/{quantity}")
-    public ResponseEntity<?> removeProductWithQuantity(@PathVariable("customerId") String customerId ,
+    public ResponseEntity<Void> removeProductWithQuantity(@PathVariable("customerId") String customerId ,
                                          @PathVariable("quantity") Integer quantity,
                                                        @PathVariable("productId") String productId){
         shoppingService.removeProductWithQuantity(customerId,productId,quantity);
@@ -51,7 +51,7 @@ public class ShoppingController {
     }
 
     @DeleteMapping("/removeProductFromCart/{customerId}/product/{productId}")
-    public ResponseEntity<?> removeAllProduct(@PathVariable("customerId") String customerId ,
+    public ResponseEntity<Void> removeAllProduct(@PathVariable("customerId") String customerId ,
                                               @PathVariable("productId") String productId){
         shoppingService.removeAllProduct(customerId,productId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -75,8 +75,8 @@ public class ShoppingController {
 
     @FeignClient("ProductService")
     interface ProductFeignClient{
-        @GetMapping("/products/{productId}/isInStock")
-        boolean checkProductInStock(@PathVariable("productId") String productId, Integer quantity);
+        @PostMapping("/products/{productId}/isInStock")
+        boolean isProductInStock(@PathVariable("productId") String productId, @RequestParam Integer quantity);
 
     }
 

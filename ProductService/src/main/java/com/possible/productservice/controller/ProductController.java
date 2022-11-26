@@ -2,6 +2,7 @@ package com.possible.productservice.controller;
 
 
 import com.possible.productservice.domain.Product;
+import com.possible.productservice.domain.ProductDto;
 import com.possible.productservice.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,38 +32,27 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product){
-        log.info("Calling add product by id");
+    public ResponseEntity<Product> addProduct(@RequestBody ProductDto product){
+        log.info("Calling add product" );
         return ResponseEntity.ok(productService.addProduct(product));
     }
 
     @DeleteMapping("/{productNumber}")
     public void deleteProductById(@PathVariable("productNumber") String productNumber){
-        log.info("Calling delete product by id");
+        log.info("Calling delete product by id - {}", productNumber);
         productService.deleteProductById(productNumber);
     }
 
     @PutMapping("/{productNumber}")
     public ResponseEntity<Product> editProduct(@PathVariable String productNumber,
-                                               @RequestBody Product product){
-        log.info("Calling edit product by id");
+                                               @RequestBody ProductDto product){
+        log.info("Calling edit product by id - {}", productNumber);
         return ResponseEntity.ok(productService.editProduct(productNumber, product));
     }
 
-    @GetMapping("/{productId}/isInStock")
-    public ResponseEntity<Boolean> productIsInStock(@PathVariable String productId, Integer quantity){
-        log.info("Calling to check product with ID - {} is in stock", productId);
-        if (productService.getProductNumInStock(productId) > quantity) return ResponseEntity.ok(true);
-        return ResponseEntity.ok(false);
+    @PostMapping("/{productId}/isInStock")
+    public boolean isProductInStock(@PathVariable String productId, @RequestParam Integer quantity){
+        return productService.getProductNumInStock(productId) > quantity;
     }
-
-//    @GetMapping("/numInStock/{productNumber}")
-//    public ResponseEntity<Integer> getProductNumInStock(@PathVariable String productNumber){
-//        return ResponseEntity.ok(productService.getProductNumInStock(productNumber));
-//    }
-//    @PutMapping("/changeQuantity")
-//    public void removeProductFromStock(@RequestBody OrderLines orderLines){
-//        productService.removeQuantityOfProducts(orderLines);
-//    }
 
 }
